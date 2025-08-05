@@ -13,7 +13,7 @@ import {
   import { RecipesService } from './recepies.service';
   import { CreateRecipeDto } from './dto/create-recipe.dto';
   import { UpdateRecipeDto } from './dto/update-recipe.dto';
-  import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+  import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
   
   @Controller('recipes')
   export class RecipesController {
@@ -31,8 +31,8 @@ import {
   
     @UseGuards(JwtAuthGuard)
     @Post()
-    create(@Body() createRecipeDto: CreateRecipeDto, @Request() req) {
-      return this.recipesService.create(createRecipeDto, req.user);
+    async create(@Body() createRecipeDto: any, @Request() req) {
+      return await this.recipesService.create(createRecipeDto, req.user);
     }
   
     @UseGuards(JwtAuthGuard)
