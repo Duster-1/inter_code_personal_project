@@ -23,12 +23,13 @@ export class RecipesService {
     return recipe;
   }
 
-  async create(createRecipeDto: CreateRecipeDto, user: User): Promise<Recipe> {
-    const recipe = this.recipesRepository.create({
+  async  create(createRecipeDto: CreateRecipeDto, user: any){
+     return  this.recipesRepository.save({
       ...createRecipeDto,
-      user,
+      user: {
+          id: user.userId
+      },
     });
-    return this.recipesRepository.save(recipe);
   }
 
   async update(id: number, updateRecipeDto: UpdateRecipeDto, user: User): Promise<Recipe> {
