@@ -32,6 +32,7 @@ import {
     @UseGuards(JwtAuthGuard)
     @Post()
     async create(@Body() createRecipeDto: any, @Request() req) {
+      console.log(JSON.stringify(createRecipeDto))  
       return await this.recipesService.create(createRecipeDto, req.user);
     }
   

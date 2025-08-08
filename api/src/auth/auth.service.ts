@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  private readonly ACCESS_TOKEN_EXPIRES_IN = '15m';
+  private readonly ACCESS_TOKEN_EXPIRES_IN = '10s';
   private readonly REFRESH_TOKEN_EXPIRES_IN = '1d';
   private readonly JWT_SECRET = '$up3r$3cretK3y!2025';
 
@@ -24,7 +24,7 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.id };
+    const payload = { sub: user.id };
     return {
       access_token: this.jwtService.sign(payload, {
         secret: this.JWT_SECRET,
@@ -46,17 +46,31 @@ export class AuthService {
     return this.login(user);
   }
 
-  async refreshTokens(userId: number, refreshToken: string) {
-    const user = await this.usersService.findById(userId);
-    if (!user) throw new UnauthorizedException('User not found');
-
+  async refreshTokens(refreshToken: string) {
     try {
       const payload = this.jwtService.verify(refreshToken, { secret: this.JWT_SECRET });
-      if (payload.sub !== user.id) throw new UnauthorizedException('Invalid token');
+      const user = await this.usersService.findById(payload.sub);
+      if (!user) throw new UnauthorizedException('User not found');
+      return this.login(user);
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
+  }
+  
 
-    return this.login(user);
+  async getMeFromToken(token: string) {
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: this.JWT_SECRET,
+      });
+
+      const user = await this.usersService.findById(payload.sub);
+      if (!user) throw new UnauthorizedException('User not found');
+
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    } catch {
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }
