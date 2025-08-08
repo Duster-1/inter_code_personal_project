@@ -24,10 +24,11 @@ export class RecipesService {
   }
 
   async  create(createRecipeDto: CreateRecipeDto, user: any){
+    console.log(user)
      return  this.recipesRepository.save({
       ...createRecipeDto,
       user: {
-          id: user.userId
+          id: user.id
       },
     });
   }
