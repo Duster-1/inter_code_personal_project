@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header/Header';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import RecipesPage from './pages/RecipesPage'
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<div>Welcome to Recipes App</div>} />
+          <Route path="/" element={<RecipesPage />} />
         </Routes>
       </Router>
     </AuthProvider>
