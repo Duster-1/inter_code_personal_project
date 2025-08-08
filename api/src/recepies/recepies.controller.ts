@@ -9,19 +9,21 @@ import {
     UseGuards,
     Request,
     ParseIntPipe,
+    Query
   } from '@nestjs/common';
   import { RecipesService } from './recepies.service';
   import { CreateRecipeDto } from './dto/create-recipe.dto';
   import { UpdateRecipeDto } from './dto/update-recipe.dto';
   import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
+  import { Recipe } from './recipe.entity'
   
   @Controller('recipes')
   export class RecipesController {
     constructor(private recipesService: RecipesService) {}
   
     @Get()
-    findAll() {
-      return this.recipesService.findAll();
+    findAll(@Query('q') q?: string): Promise<Recipe[]> {
+      return this.recipesService.findAll(q);
     }
   
     @Get(':id')

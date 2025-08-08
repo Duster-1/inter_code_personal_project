@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Recipe } from './recipe.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository} from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -13,7 +13,15 @@ export class RecipesService {
     private recipesRepository: Repository<Recipe>,
   ) {}
 
-  findAll(): Promise<Recipe[]> {
+  async findAll(q?: string): Promise<Recipe[]> {
+    if (q && q.trim() !== '') {
+      return this.recipesRepository.find({
+        where: [
+          { title: ILike(`${q}%`) },
+          { description: ILike(`${q}%`) }
+        ],
+      });
+    }
     return this.recipesRepository.find();
   }
 
