@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
@@ -6,27 +6,28 @@ const Header = ({ onSearch }) => {
   const { user, logout } = useContext(AuthContext);
   const [query, setQuery] = useState('');
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    onSearch(query);
-  };
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      onSearch(query);
+    }, 300);
+
+    return () => clearTimeout(delay);
+  }, [query]);
 
   return (
     <header className="header">
       <Link to="/">Home</Link>
 
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Search recipes..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
+      <input
+        type="text"
+        placeholder="Search recipes..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
 
       {user ? (
         <>
+          <button>Додати рецепт</button>
           <span>Hi, {user.username}</span>
           <button onClick={logout}>Logout</button>
         </>

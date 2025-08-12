@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const res = await api.get('/auth/me');
         setUser(res.data);
+        console.log("---------------", user)
       } catch {
         logout();
       }

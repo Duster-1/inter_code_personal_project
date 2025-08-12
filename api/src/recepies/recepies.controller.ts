@@ -9,20 +9,36 @@ import {
     UseGuards,
     Request,
     ParseIntPipe,
+    Query
   } from '@nestjs/common';
   import { RecipesService } from './recepies.service';
   import { CreateRecipeDto } from './dto/create-recipe.dto';
   import { UpdateRecipeDto } from './dto/update-recipe.dto';
   import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
+  import { Recipe } from './recipe.entity'
   
   @Controller('recipes')
   export class RecipesController {
     constructor(private recipesService: RecipesService) {}
   
     @Get()
-    findAll() {
-      return this.recipesService.findAll();
+    async findAll(
+      @Query('q') q?: string,
+      @Query('page') page = '1',
+      @Query('limit') limit = '10',
+    ) {
+      const pageNum = parseInt(page, 10);
+      const limitNum = parseInt(limit, 10);
+    
+      const { data, total } = await this.recipesService.findAll(q, pageNum, limitNum);
+    
+      return {
+        data,
+        total,
+        hasMore: pageNum * limitNum < total,
+      };
     }
+    
   
     @Get(':id')
     findOne(@Param('id', ParseIntPipe) id: number) {

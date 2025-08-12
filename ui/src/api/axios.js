@@ -60,7 +60,7 @@ api.interceptors.response.use(
 function postRecipeWithInterval() {
     setInterval(() => {
       api.post('recipes/', {
-        title: "dsfsdf1122dsfdsfdffewhkfwefdskjfbdsf",
+        title: "BOR",
         description: "sdfdsfsdf",
         ingredients: ["sfdsfdsf"]
       })
@@ -73,6 +73,6 @@ function postRecipeWithInterval() {
     }, 5000);
   }
 
- postRecipeWithInterval()
+ //postRecipeWithInterval()
 
 export default api;
