@@ -12,7 +12,7 @@ const Header = ({ onSearch }) => {
     }, 300);
 
     return () => clearTimeout(delay);
-  }, [query, onSearch]);
+  }, [query]);
 
   return (
     <header className="header">

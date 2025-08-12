@@ -1,4 +1,5 @@
-import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
+// auth.controller.ts
+import { Controller, Post, Body, UseGuards, Req, Get, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -21,7 +22,14 @@ export class AuthController {
   }
 
   @Post('refresh')
-  async refresh(@Body() body: { userId: number; refreshToken: string }) {
-    return this.authService.refreshTokens(body.userId, body.refreshToken);
+  async refresh(@Body() body: { refreshToken: string }) {
+  return this.authService.refreshTokens(body.refreshToken);
+}
+
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getMe(@Req() req) {
+    return req.user;
   }
 }

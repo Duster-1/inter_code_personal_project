@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { Repository, ILike } from 'typeorm';
 import { Recipe } from './recipe.entity';
-import { InjectRepository} from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
@@ -13,17 +13,33 @@ export class RecipesService {
     private recipesRepository: Repository<Recipe>,
   ) {}
 
-  async findAll(q?: string): Promise<Recipe[]> {
-    if (q && q.trim() !== '') {
-      return this.recipesRepository.find({
-        where: [
+
+  async findAll(
+    q?: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Recipe[]; total: number; hasMore: boolean }> {
+    const skip = (page - 1) * limit;
+  
+    const where = q && q.trim() !== ''
+      ? [
           { title: ILike(`${q}%`) },
           { description: ILike(`${q}%`) }
-        ],
-      });
-    }
-    return this.recipesRepository.find();
+        ]
+      : {};
+  
+    const [data, total] = await this.recipesRepository.findAndCount({
+      where,
+      skip,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+  
+    const hasMore = page * limit < total;
+  
+    return { data, total, hasMore };
   }
+  
 
   async findOne(id: number): Promise<Recipe> {
     const recipe = await this.recipesRepository.findOne({ where: { id } });
@@ -31,12 +47,10 @@ export class RecipesService {
     return recipe;
   }
 
-  async  create(createRecipeDto: CreateRecipeDto, user: any){
-     return  this.recipesRepository.save({
+  async create(createRecipeDto: CreateRecipeDto, user: any) {
+    return this.recipesRepository.save({
       ...createRecipeDto,
-      user: {
-          id: user.userId
-      },
+      user: { id: user.id },
     });
   }
 

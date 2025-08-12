@@ -22,9 +22,23 @@ import {
     constructor(private recipesService: RecipesService) {}
   
     @Get()
-    findAll(@Query('q') q?: string): Promise<Recipe[]> {
-      return this.recipesService.findAll(q);
+    async findAll(
+      @Query('q') q?: string,
+      @Query('page') page = '1',
+      @Query('limit') limit = '10',
+    ) {
+      const pageNum = parseInt(page, 10);
+      const limitNum = parseInt(limit, 10);
+    
+      const { data, total } = await this.recipesService.findAll(q, pageNum, limitNum);
+    
+      return {
+        data,
+        total,
+        hasMore: pageNum * limitNum < total,
+      };
     }
+    
   
     @Get(':id')
     findOne(@Param('id', ParseIntPipe) id: number) {
@@ -34,6 +48,7 @@ import {
     @UseGuards(JwtAuthGuard)
     @Post()
     async create(@Body() createRecipeDto: any, @Request() req) {
+      console.log(JSON.stringify(createRecipeDto))  
       return await this.recipesService.create(createRecipeDto, req.user);
     }
   
