@@ -1,0 +1,28 @@
+.toaster {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  color: #fff;
+  border-radius: 6px;
+  animation: fadeIn 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.toaster-success {
+  background-color: #4caf50;
+}
+.toaster-error {
+  background-color: #f44336;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

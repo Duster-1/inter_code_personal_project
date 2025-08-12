@@ -1,0 +1,36 @@
+/* components/RecipeModal/RecipeModal.scss */
+.recipe-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.recipe-modal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.recipe-modal input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.preview-img {
+  max-width: 100%;
+  height: auto;
+  margin: 8px 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
