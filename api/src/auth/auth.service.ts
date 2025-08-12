@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  private readonly ACCESS_TOKEN_EXPIRES_IN = '10s';
+  private readonly ACCESS_TOKEN_EXPIRES_IN = '15m';
   private readonly REFRESH_TOKEN_EXPIRES_IN = '1d';
   private readonly JWT_SECRET = '$up3r$3cretK3y!2025';
 

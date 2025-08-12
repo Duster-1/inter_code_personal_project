@@ -46,13 +46,20 @@ export class RecipesService {
     if (!recipe) throw new NotFoundException('Recipe not found');
     return recipe;
   }
-
+  
   async create(createRecipeDto: CreateRecipeDto, user: any) {
-    return this.recipesRepository.save({
+    if (!createRecipeDto.imageUrl || createRecipeDto.imageUrl.trim() === '') {
+      delete createRecipeDto.imageUrl;
+    }
+  
+    const recipe = this.recipesRepository.create({
       ...createRecipeDto,
       user: { id: user.id },
     });
+  
+    return this.recipesRepository.save(recipe);
   }
+  
 
   async update(id: number, updateRecipeDto: UpdateRecipeDto, user: User): Promise<Recipe> {
     const recipe = await this.findOne(id);

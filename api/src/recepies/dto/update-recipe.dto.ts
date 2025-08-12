@@ -13,4 +13,8 @@ export class UpdateRecipeDto {
   @IsArray()
   @IsString({ each: true })
   ingredients?: string[];
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 }
